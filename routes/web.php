@@ -10,5 +10,5 @@ Route::get('/', function () {
 
 Volt::route('/alcaldes', 'alcaldes');
 Volt::route('/concejales', 'concejales');
-
+Volt::route('/resultados', 'resultados');
 Route::get('/talonador', Talonador::class);
