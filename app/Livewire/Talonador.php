@@ -224,7 +224,7 @@ class Talonador extends Component implements HasForms
                                     ->numeric()
                                     ->default(0)
                                     ->rules(['nullable', 'numeric', 'min:0', 'max:400'])
-                                    ->live()
+                                    ->live(onBlur: true)
                                     ->inputMode('numeric')
                                     ->afterStateUpdated(function ($state) {
                                         return $state === '' || $state === null ? 0 : (int) $state;
