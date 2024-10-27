@@ -26,6 +26,10 @@
                class="bg-white text-blue-600 px-8 py-3 rounded-lg shadow-lg hover:bg-blue-50 transition-colors duration-200 font-semibold text-lg w-full sm:w-auto">
                 Panel de Administración
             </a>
+            <a href="/resultados"
+               class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-200 font-semibold text-lg w-full sm:w-auto">
+                Resultados Electorales
+            </a>
             <a href="/talonador"
                class="bg-blue-800 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-200 font-semibold text-lg w-full sm:w-auto">
                 Acceso Talonador
