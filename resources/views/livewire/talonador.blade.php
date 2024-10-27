@@ -75,7 +75,7 @@
                     </div>
                 @else
                     <div class="pt-4 border-t border-blue-100">
-                        <div class="flex justify-end">
+                        <div class="flex justify-start">
                             <button
                                 type="button"
                                 wire:click="resetForm"
