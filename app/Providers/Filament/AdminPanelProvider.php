@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Elecciones 2024')
             ->colors([
                 'primary' => Color::Fuchsia,
             ])
