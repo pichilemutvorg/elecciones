@@ -16,7 +16,7 @@ mount(function () {
 });
 
 $calculateDHondt = function ($results, $seats = 6) {
-    // Agrupar por pacto, excluyendo votos blancos y nulos
+    // 1. Primer cálculo D'Hondt a nivel de pacto
     $pactos = collect($results)
         ->filter(fn($r) => !in_array($r['name'], ['Blancos', 'Nulos']))
         ->groupBy('pacto')
@@ -24,45 +24,79 @@ $calculateDHondt = function ($results, $seats = 6) {
             $votes = $candidates->sum('votes');
             return [
                 'votes' => $votes,
-                'candidates' => $candidates
-                    ->sortByDesc('votes')
-                    ->values()
-                    ->map(fn($c) => [
-                        'name' => $c['name'],
-                        'votes' => $c['votes']
+                'candidates' => $candidates,
+                // Agrupar por subpacto dentro del pacto
+                'subpactos' => $candidates->groupBy('subpacto')
+                    ->map(fn($subCandidates) => [
+                        'votes' => $subCandidates->sum('votes'),
+                        'candidates' => $subCandidates->sortByDesc('votes')->values()
                     ])
             ];
         })
         ->filter(fn($pacto) => $pacto['votes'] > 0);
 
-    // Calcular todos los cocientes posibles
+    // Calcular cocientes para pactos
     $quotients = collect();
     foreach ($pactos as $pactoName => $pacto) {
         for ($i = 1; $i <= $seats; $i++) {
             $quotients->push([
                 'pacto' => $pactoName,
-                'quotient' => floor($pacto['votes'] / $i), // Usar floor para redondear hacia abajo
+                'quotient' => floor($pacto['votes'] / $i),
                 'divisor' => $i,
-                'candidates' => $pacto['candidates']
+                'subpactos' => $pacto['subpactos']
             ]);
         }
     }
 
-    // Ordenar por cociente y tomar los 6 mayores
+    // Determinar escaños por pacto
     $winners = $quotients->sortByDesc('quotient')
         ->take($seats);
 
-    // Contar cuántos escaños gana cada pacto
     $seatsPerPacto = $winners->groupBy('pacto')
         ->map(fn($group) => $group->count());
 
-    // Determinar los candidatos electos
+    // 2. Segundo cálculo D'Hondt dentro de cada pacto para sus subpactos
     $elected = collect();
-    foreach ($seatsPerPacto as $pactoName => $seatsWon) {
-        $candidates = $pactos[$pactoName]['candidates']
-            ->take($seatsWon)
-            ->pluck('name');
-        $elected = $elected->merge($candidates);
+    foreach ($seatsPerPacto as $pactoName => $pactoSeats) {
+        $pactoData = $pactos[$pactoName];
+        $subpactos = $pactoData['subpactos'];
+
+        // Si el pacto solo tiene un subpacto, asignar directamente
+        if ($subpactos->count() === 1) {
+            $subpacto = $subpactos->first();
+            $elected = $elected->merge(
+                $subpacto['candidates']
+                    ->take($pactoSeats)
+                    ->pluck('name')
+            );
+            continue;
+        }
+
+        // Calcular cocientes para subpactos
+        $subQuotients = collect();
+        foreach ($subpactos as $subpactoName => $subpacto) {
+            for ($i = 1; $i <= $pactoSeats; $i++) {
+                $subQuotients->push([
+                    'subpacto' => $subpactoName,
+                    'quotient' => floor($subpacto['votes'] / $i),
+                    'candidates' => $subpacto['candidates']
+                ]);
+            }
+        }
+
+        // Asignar escaños a subpactos
+        $subpactoWinners = $subQuotients->sortByDesc('quotient')
+            ->take($pactoSeats)
+            ->groupBy('subpacto');
+
+        // Seleccionar candidatos de cada subpacto
+        foreach ($subpactoWinners as $subpactoName => $wins) {
+            $seatsForSubpacto = $wins->count();
+            $candidates = $subpactos[$subpactoName]['candidates']
+                ->take($seatsForSubpacto)
+                ->pluck('name');
+            $elected = $elected->merge($candidates);
+        }
     }
 
     return $elected->toArray();
