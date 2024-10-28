@@ -16,41 +16,53 @@ mount(function () {
 });
 
 $calculateDHondt = function ($results, $seats = 6) {
-    // Agrupar por pacto
+    // Agrupar por pacto, excluyendo votos blancos y nulos
     $pactos = collect($results)
         ->filter(fn($r) => !in_array($r['name'], ['Blancos', 'Nulos']))
         ->groupBy('pacto')
         ->map(function ($candidates) {
+            $votes = $candidates->sum('votes');
             return [
-                'votes' => $candidates->sum('votes'),
-                'candidates' => $candidates->sortByDesc('votes')->values()
+                'votes' => $votes,
+                'candidates' => $candidates
+                    ->sortByDesc('votes')
+                    ->values()
+                    ->map(fn($c) => [
+                        'name' => $c['name'],
+                        'votes' => $c['votes']
+                    ])
             ];
         })
         ->filter(fn($pacto) => $pacto['votes'] > 0);
 
-    // Calcular cocientes
+    // Calcular todos los cocientes posibles
     $quotients = collect();
     foreach ($pactos as $pactoName => $pacto) {
         for ($i = 1; $i <= $seats; $i++) {
             $quotients->push([
                 'pacto' => $pactoName,
-                'quotient' => $pacto['votes'] / $i,
-                'position' => $i
+                'quotient' => floor($pacto['votes'] / $i), // Usar floor para redondear hacia abajo
+                'divisor' => $i,
+                'candidates' => $pacto['candidates']
             ]);
         }
     }
 
-    // Obtener los mayores cocientes
+    // Ordenar por cociente y tomar los 6 mayores
     $winners = $quotients->sortByDesc('quotient')
-        ->take($seats)
-        ->groupBy('pacto');
+        ->take($seats);
 
-    // Determinar candidatos electos por pacto
+    // Contar cuántos escaños gana cada pacto
+    $seatsPerPacto = $winners->groupBy('pacto')
+        ->map(fn($group) => $group->count());
+
+    // Determinar los candidatos electos
     $elected = collect();
-    foreach ($winners as $pactoName => $pactoWinners) {
-        $seatsWon = $pactoWinners->count();
-        $candidates = $pactos[$pactoName]['candidates']->take($seatsWon);
-        $elected = $elected->merge($candidates->pluck('name'));
+    foreach ($seatsPerPacto as $pactoName => $seatsWon) {
+        $candidates = $pactos[$pactoName]['candidates']
+            ->take($seatsWon)
+            ->pluck('name');
+        $elected = $elected->merge($candidates);
     }
 
     return $elected->toArray();
