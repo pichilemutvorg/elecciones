@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal query()
