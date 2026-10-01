@@ -187,7 +187,7 @@ $getProgress = function () {
     }
 
     $allMesas = \App\Models\Mesa::count();
-    $progress = ($countedMesa / $allMesas) * 100;
+    $progress = $allMesas > 0 ? ($countedMesa / $allMesas) * 100 : 0.0;
 
     $this->isComplete = $progress >= 100;
 
