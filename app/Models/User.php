@@ -37,6 +37,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
+ * @property bool $is_admin
+ * @method static Builder<static>|User whereIsAdmin($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser
@@ -44,14 +46,34 @@ class User extends Authenticatable implements FilamentUser
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    /**
+     * Indica si la cuenta administra el panel.
+     *
+     * El cast `boolean` de Eloquent devuelve null en lugar de false cuando el
+     * atributo nunca llego a cargarse, por lo que se normaliza aqui. Es lo que
+     * permite que canAccessPanel() y UserPolicy respecten su tipo de retorno.
+     */
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        // You may optionally implement your own logic here when a user has access to this panel.
-        return true;
+        // Este es el contrato que Filament consulta a traves de su middleware
+        // Authenticate. Se resuelve con la bandera y no con Gate porque Gate
+        // elige la policy a partir del primer argumento de la habilidad, y aqui
+        // ese argumento es el Panel, no el usuario. La autorizacion por modelo
+        // vive en App\Policies\UserPolicy.
+        return $this->isAdmin();
     }
 
     /**
      * The attributes that are mass assignable.
+     *
+     * `is_admin` queda deliberadamente fuera: si fuera asignable en masa,
+     * cualquier formulario que cree o actualice un usuario podria concederle
+     * acceso al panel.
      *
      * @var array<int, string>
      */
@@ -81,6 +103,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 }
