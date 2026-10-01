@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Pacto;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pacto>
+ * @extends Factory<Pacto>
  */
 class PactoFactory extends Factory
 {

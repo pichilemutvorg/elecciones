@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Local;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Local>
+ * @extends Factory<Local>
  */
 class LocalFactory extends Factory
 {

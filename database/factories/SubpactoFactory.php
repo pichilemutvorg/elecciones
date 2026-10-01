@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Subpacto;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subpacto>
+ * @extends Factory<Subpacto>
  */
 class SubpactoFactory extends Factory
 {

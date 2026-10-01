@@ -5,6 +5,14 @@
 /public/storage
 /storage/*.key
 /vendor
+
+# Generados por barryvdh/laravel-ide-helper. Se regeneran con
+# `composer update` (scripts post-update-cmd) y no deberian versionarse:
+# ocupaban 5,1 MB del repositorio y generaban diffs de miles de lineas en
+# cada actualizacion del framework.
+/_ide_helper.php
+/.phpstorm.meta.php
+
 .env
 .env.backup
 .env.production

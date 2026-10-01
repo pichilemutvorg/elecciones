@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Partido;
+use Illuminate\Database\Seeder;
 
 class PartidoSeeder extends Seeder
 {

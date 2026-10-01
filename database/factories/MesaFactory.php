@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Mesa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Mesa>
+ * @extends Factory<Mesa>
  */
 class MesaFactory extends Factory
 {

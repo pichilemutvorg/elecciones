@@ -4,10 +4,11 @@ namespace Database\Factories;
 
 use App\Models\Alcalde;
 use App\Models\Mesa;
+use App\Models\ResultadosAlcalde;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ResultadosAlcalde>
+ * @extends Factory<ResultadosAlcalde>
  */
 class ResultadosAlcaldeFactory extends Factory
 {
