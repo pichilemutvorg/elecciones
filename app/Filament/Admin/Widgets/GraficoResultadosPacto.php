@@ -10,11 +10,11 @@ use Illuminate\Support\Collection;
 
 class GraficoResultadosPacto extends ChartWidget
 {
-    protected static ?string $heading = 'Votación por Pacto Electoral - Concejales';
+    protected ?string $heading = 'Votación por Pacto Electoral - Concejales';
 
-    protected static ?string $pollingInterval = '1s';
+    protected ?string $pollingInterval = '1s';
 
-    protected static ?array $options = [
+    protected ?array $options = [
         'plugins' => [
             'legend' => [
                 'display' => false,

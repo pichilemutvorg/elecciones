@@ -2,27 +2,30 @@
 
 namespace App\Models;
 
+use Database\Factories\MesaFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $number
  * @property int $local_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Local|null $local
- * @method static \Database\Factories\MesaFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa query()
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereLocalId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Mesa whereNumber($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Local|null $local
+ * @method static MesaFactory factory($count = null, $state = [])
+ * @method static Builder|Mesa newModelQuery()
+ * @method static Builder|Mesa newQuery()
+ * @method static Builder|Mesa query()
+ * @method static Builder|Mesa whereCreatedAt($value)
+ * @method static Builder|Mesa whereId($value)
+ * @method static Builder|Mesa whereLocalId($value)
+ * @method static Builder|Mesa whereName($value)
+ * @method static Builder|Mesa whereUpdatedAt($value)
+ * @method static Builder|Mesa whereNumber($value)
  * @mixin \Eloquent
  */
 class Mesa extends Model

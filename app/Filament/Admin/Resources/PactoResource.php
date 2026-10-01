@@ -2,30 +2,33 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PactoResource\Pages;
+use App\Filament\Admin\Resources\PactoResource\Pages\ManagePactos;
 use App\Models\Pacto;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class PactoResource extends Resource
 {
     protected static ?string $model = Pacto::class;
 
-    protected static ?string $navigationGroup = 'Coaliciones';
+    protected static string|\UnitEnum|null $navigationGroup = 'Coaliciones';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Pacto')
                     ->required(),
-                Forms\Components\TextInput::make('letter')
+                TextInput::make('letter')
                     ->label('Letra'),
-                Forms\Components\TextInput::make('icon')
+                TextInput::make('icon')
                     ->label('Ícono'),
             ]);
     }
@@ -34,24 +37,24 @@ class PactoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('letter')
+                TextColumn::make('letter')
                     ->label('Letra')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Pacto')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon')
+                TextColumn::make('icon')
                     ->label('Ícono'),
             ])
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -59,7 +62,7 @@ class PactoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePactos::route('/'),
+            'index' => ManagePactos::route('/'),
         ];
     }
 }

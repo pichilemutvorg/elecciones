@@ -2,13 +2,16 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\LocalResource\Pages;
+use App\Filament\Admin\Resources\LocalResource\Pages\ManageLocals;
 use App\Models\Local;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class LocalResource extends Resource
@@ -17,12 +20,12 @@ class LocalResource extends Resource
 
     protected static ?string $label = 'Locales';
 
-    protected static ?string $navigationGroup = 'Votación';
+    protected static string|\UnitEnum|null $navigationGroup = 'Votación';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->label('Nombre')
                     ->required(),
@@ -36,22 +39,22 @@ class LocalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('address')
+                TextColumn::make('address')
                     ->label('Dirección')
                     ->searchable(),
             ])
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -59,7 +62,7 @@ class LocalResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageLocals::route('/'),
+            'index' => ManageLocals::route('/'),
         ];
     }
 }

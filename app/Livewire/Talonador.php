@@ -8,16 +8,18 @@ use App\Models\Local;
 use App\Models\Mesa;
 use App\Models\ResultadosAlcalde;
 use App\Models\ResultadosConcejal;
-use Filament\Forms\Components\Grid;
+use Exception;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +27,7 @@ use Livewire\Component;
 
 class Talonador extends Component implements HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public array $data = [
@@ -116,10 +119,10 @@ class Talonador extends Component implements HasForms
             ->sum(fn ($voto) => (int) $voto);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
-            ->schema([
+            ->components([
                 Section::make('Seleccionar mesa de votación')
                     ->description('Seleccione el tipo de elección y la mesa para ingresar resultados')
                     ->columns(3)
@@ -310,12 +313,12 @@ class Talonador extends Component implements HasForms
 
                 $this->resetForm();
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 DB::rollBack();
                 throw $e;
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->addError('form', 'Hubo un error procesando el formulario: '.$e->getMessage());
         }
     }

@@ -9,6 +9,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Collection;
+use Number;
+use Storage;
 
 class TablaResultadosConcejales extends BaseWidget
 {
@@ -38,7 +40,7 @@ class TablaResultadosConcejales extends BaseWidget
                     ->label('Concejales electos')
                     ->formatStateUsing(function (Concejal $record) {
                         $photoUrl = $record->photo
-                            ? \Storage::disk('public')->url($record->photo)
+                            ? Storage::disk('public')->url($record->photo)
                             : 'https://ui-avatars.com/api/?name='.urlencode($record->name);
 
                         // Generar color consistente basado en la letra del pacto o nombre
@@ -85,7 +87,7 @@ class TablaResultadosConcejales extends BaseWidget
                         $totalVotes = ResultadosConcejal::sum('votes');
 
                         return $totalVotes > 0
-                            ? \Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
+                            ? Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
                             : '0.0';
                     }),
             ])

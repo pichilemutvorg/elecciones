@@ -2,27 +2,32 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ResultadosAlcaldeResource\Pages;
+use App\Filament\Admin\Resources\ResultadosAlcaldeResource\Pages\ManageResultadosAlcaldes;
 use App\Models\Mesa;
 use App\Models\ResultadosAlcalde;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ResultadosAlcaldeResource extends Resource
 {
     protected static ?string $model = ResultadosAlcalde::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('mesa_id')
+        return $schema
+            ->components([
+                Select::make('mesa_id')
                     ->label('Mesa')
                     ->relationship(
                         'mesa',
@@ -46,7 +51,7 @@ class ResultadosAlcaldeResource extends Resource
                     ->optionsLimit(10)
                     ->nullable()
                     ->required(),
-                Forms\Components\Select::make('alcalde_id')
+                Select::make('alcalde_id')
                     ->label('Candidato')
                     ->relationship(
                         'alcalde',
@@ -55,7 +60,7 @@ class ResultadosAlcaldeResource extends Resource
                     )
                     ->nullable()
                     ->required(),
-                Forms\Components\TextInput::make('votes')
+                TextInput::make('votes')
                     ->label('Votación')
                     ->suffix('votos')
                     ->numeric()
@@ -67,32 +72,32 @@ class ResultadosAlcaldeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('mesa.local.name')
+                TextColumn::make('mesa.local.name')
                     ->label('Local'),
-                Tables\Columns\TextColumn::make('mesa.number')
+                TextColumn::make('mesa.number')
                     ->label('Mesa'),
-                Tables\Columns\TextColumn::make('alcalde.name')
+                TextColumn::make('alcalde.name')
                     ->label('Candidato'),
-                Tables\Columns\TextColumn::make('votes')
+                TextColumn::make('votes')
                     ->label('Votación'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('mesa.local_id')
+                SelectFilter::make('mesa.local_id')
                     ->label('Local')
                     ->relationship('mesa.local', 'name'),
-                Tables\Filters\SelectFilter::make('mesa_id')
+                SelectFilter::make('mesa_id')
                     ->label('Mesa')
                     ->relationship('mesa', 'number'),
-                Tables\Filters\SelectFilter::make('alcalde_id')
+                SelectFilter::make('alcalde_id')
                     ->label('Candidato')
                     ->relationship('alcalde', 'name'),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -100,7 +105,7 @@ class ResultadosAlcaldeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageResultadosAlcaldes::route('/'),
+            'index' => ManageResultadosAlcaldes::route('/'),
         ];
     }
 }

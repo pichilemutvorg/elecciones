@@ -2,25 +2,28 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\SubpactoResource\Pages;
+use App\Filament\Admin\Resources\SubpactoResource\Pages\ManageSubpactos;
 use App\Models\Subpacto;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SubpactoResource extends Resource
 {
     protected static ?string $model = Subpacto::class;
 
-    protected static ?string $navigationGroup = 'Coaliciones';
+    protected static string|\UnitEnum|null $navigationGroup = 'Coaliciones';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')->required()->label('Nombre'),
+        return $schema
+            ->components([
+                TextInput::make('name')->required()->label('Nombre'),
             ]);
     }
 
@@ -28,17 +31,17 @@ class SubpactoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
+                TextColumn::make('name')->searchable(),
             ])
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -46,7 +49,7 @@ class SubpactoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSubpactos::route('/'),
+            'index' => ManageSubpactos::route('/'),
         ];
     }
 }

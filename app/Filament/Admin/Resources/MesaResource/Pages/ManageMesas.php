@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\MesaResource\Pages;
 
 use App\Filament\Admin\Resources\MesaResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ManageMesas extends ListRecords
@@ -13,7 +13,7 @@ class ManageMesas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

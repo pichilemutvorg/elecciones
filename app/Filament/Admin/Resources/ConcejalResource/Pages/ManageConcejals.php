@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\ConcejalResource\Pages;
 
 use App\Filament\Admin\Resources\ConcejalResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageConcejals extends ManageRecords
@@ -13,7 +13,7 @@ class ManageConcejals extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

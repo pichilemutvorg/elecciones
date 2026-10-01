@@ -2,29 +2,32 @@
 
 namespace App\Models;
 
+use Database\Factories\ResultadosConcejalFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal query()
+ * @method static Builder<static>|ResultadosConcejal newModelQuery()
+ * @method static Builder<static>|ResultadosConcejal newQuery()
+ * @method static Builder<static>|ResultadosConcejal query()
  * @property int $id
  * @property int $mesa_id
  * @property int $concejal_id
  * @property int $votes
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Concejal|null $concejal
- * @property-read \App\Models\Mesa|null $mesa
- * @method static \Database\Factories\ResultadosConcejalFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereConcejalId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereMesaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ResultadosConcejal whereVotes($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Concejal|null $concejal
+ * @property-read Mesa|null $mesa
+ * @method static ResultadosConcejalFactory factory($count = null, $state = [])
+ * @method static Builder<static>|ResultadosConcejal whereConcejalId($value)
+ * @method static Builder<static>|ResultadosConcejal whereCreatedAt($value)
+ * @method static Builder<static>|ResultadosConcejal whereId($value)
+ * @method static Builder<static>|ResultadosConcejal whereMesaId($value)
+ * @method static Builder<static>|ResultadosConcejal whereUpdatedAt($value)
+ * @method static Builder<static>|ResultadosConcejal whereVotes($value)
  * @mixin \Eloquent
  */
 class ResultadosConcejal extends Model

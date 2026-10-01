@@ -2,25 +2,29 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\MesaResource\Pages;
+use App\Filament\Admin\Resources\MesaResource\Pages\ManageMesas;
 use App\Models\Mesa;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class MesaResource extends Resource
 {
     protected static ?string $model = Mesa::class;
 
-    protected static ?string $navigationGroup = 'Votación';
+    protected static string|\UnitEnum|null $navigationGroup = 'Votación';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('number')
                     ->label('Número de mesa')
                     ->required(),
@@ -38,23 +42,23 @@ class MesaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('number')
+                TextColumn::make('number')
                     ->label('Número de mesa')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('local.name'),
+                TextColumn::make('local.name'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('local_id')
+                SelectFilter::make('local_id')
                     ->label('Local de votación')
                     ->relationship('local', 'name')
                     ->placeholder('Buscar por local de votación'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -62,7 +66,7 @@ class MesaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageMesas::route('/'),
+            'index' => ManageMesas::route('/'),
         ];
     }
 }

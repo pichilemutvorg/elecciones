@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\LocalResource\Pages;
 
 use App\Filament\Admin\Resources\LocalResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ManageLocals extends ListRecords
@@ -13,7 +13,7 @@ class ManageLocals extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

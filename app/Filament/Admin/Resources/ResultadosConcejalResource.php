@@ -2,36 +2,41 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ResultadosConcejalResource\Pages;
+use App\Filament\Admin\Resources\ResultadosConcejalResource\Pages\ManageResultadosConcejals;
 use App\Models\ResultadosConcejal;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ResultadosConcejalResource extends Resource
 {
     protected static ?string $model = ResultadosConcejal::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Resultados Concejales';
 
     protected static ?string $label = 'Resultados Concejales';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('mesa_id')
+        return $schema
+            ->components([
+                Select::make('mesa_id')
                     ->relationship('mesa', 'id')
                     ->required(),
-                Forms\Components\Select::make('concejal_id')
+                Select::make('concejal_id')
                     ->relationship('concejal', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('votes')
+                TextInput::make('votes')
                     ->required()
                     ->numeric(),
             ]);
@@ -41,38 +46,38 @@ class ResultadosConcejalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('mesa.local.name')
+                TextColumn::make('mesa.local.name')
                     ->width('200px')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('mesa.id')
+                TextColumn::make('mesa.id')
                     ->numeric()
                     ->width('4ch')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('concejal.name')
+                TextColumn::make('concejal.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('votes')
+                TextColumn::make('votes')
                     ->label('Votación')
                     ->numeric()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('local_id')
+                SelectFilter::make('local_id')
                     ->relationship('mesa.local', 'name')
                     ->label('Local'),
-                Tables\Filters\SelectFilter::make('mesa_id')
+                SelectFilter::make('mesa_id')
                     ->relationship('mesa', 'id')
                     ->label('Mesa'),
-                Tables\Filters\SelectFilter::make('concejal_id')
+                SelectFilter::make('concejal_id')
                     ->relationship('concejal', 'name')
                     ->label('Concejal'),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -80,7 +85,7 @@ class ResultadosConcejalResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageResultadosConcejals::route('/'),
+            'index' => ManageResultadosConcejals::route('/'),
         ];
     }
 }

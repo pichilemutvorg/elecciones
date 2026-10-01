@@ -2,27 +2,30 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PartidoResource\Pages;
+use App\Filament\Admin\Resources\PartidoResource\Pages\ManagePartidos;
 use App\Models\Partido;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class PartidoResource extends Resource
 {
     protected static ?string $model = Partido::class;
 
-    protected static ?string $navigationGroup = 'Coaliciones';
+    protected static string|\UnitEnum|null $navigationGroup = 'Coaliciones';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')->required()->label('Nombre'),
-                Forms\Components\TextInput::make('abbr')->required()->label('Abreviatura'),
-                Forms\Components\TextInput::make('icon')->label('Icono'),
+        return $schema
+            ->components([
+                TextInput::make('name')->required()->label('Nombre'),
+                TextInput::make('abbr')->required()->label('Abreviatura'),
+                TextInput::make('icon')->label('Icono'),
             ]);
     }
 
@@ -30,19 +33,19 @@ class PartidoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('abbr')->searchable(),
-                Tables\Columns\TextColumn::make('icon')->searchable(),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('abbr')->searchable(),
+                TextColumn::make('icon')->searchable(),
             ])
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -50,7 +53,7 @@ class PartidoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePartidos::route('/'),
+            'index' => ManagePartidos::route('/'),
         ];
     }
 }

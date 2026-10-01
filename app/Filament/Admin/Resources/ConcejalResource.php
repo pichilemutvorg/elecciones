@@ -2,15 +2,26 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ConcejalResource\Pages;
+use App\Filament\Admin\Resources\ConcejalResource\Pages\ManageConcejals;
 use App\Models\Concejal;
 use App\Models\ResultadosConcejal;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Number;
+use Storage;
 
 class ConcejalResource extends Resource
 {
@@ -18,39 +29,39 @@ class ConcejalResource extends Resource
 
     protected static ?string $pluralModelLabel = 'concejales';
 
-    protected static ?string $navigationGroup = 'Candidatos';
+    protected static string|\UnitEnum|null $navigationGroup = 'Candidatos';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('number')
+        return $schema
+            ->components([
+                TextInput::make('number')
                     ->label('Número')
                     ->required()
                     ->numeric(),
-                Forms\Components\Toggle::make('is_independent')
+                Toggle::make('is_independent')
                     ->label('Independiente'),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label('Nombre completo')
                     ->required(),
-                Forms\Components\ColorPicker::make('color')
+                ColorPicker::make('color')
                     ->label('Color identificador')
                     ->nullable(),
-                Forms\Components\FileUpload::make('photo')
+                FileUpload::make('photo')
                     ->label('Fotografía')
                     ->image()
                     ->imageEditor()
                     ->nullable()
                     ->directory('concejales'),
-                Forms\Components\Select::make('partido_id')
+                Select::make('partido_id')
                     ->label('Partido')
                     ->relationship('partido', 'name')
                     ->nullable(),
-                Forms\Components\Select::make('pacto_id')
+                Select::make('pacto_id')
                     ->label('Pacto')
                     ->relationship('pacto', 'name')
                     ->nullable(),
-                Forms\Components\Select::make('subpacto_id')
+                Select::make('subpacto_id')
                     ->label('Subpacto')
                     ->relationship('subpacto', 'name')
                     ->nullable(),
@@ -61,7 +72,7 @@ class ConcejalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('number')
+                TextColumn::make('number')
                     ->label('Número')
                     ->alignRight()
                     ->width('6ch')
@@ -69,12 +80,12 @@ class ConcejalResource extends Resource
                         ? ''
                         : "{$record->pacto?->letter} {$record->number}")
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Candidato')
                     ->searchable()
                     ->formatStateUsing(function (Concejal $record) {
                         $photoUrl = $record->photo
-                            ? \Storage::disk('public')->url($record->photo)
+                            ? Storage::disk('public')->url($record->photo)
                             : 'https://ui-avatars.com/api/?name='.urlencode($record->name);
 
                         $style = $record->color
@@ -105,22 +116,22 @@ class ConcejalResource extends Resource
                         ";
                     })
                     ->html(),
-                Tables\Columns\ColorColumn::make('color')
+                ColorColumn::make('color')
                     ->label('Color')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
-                Tables\Columns\TextColumn::make('partido.abbr')
+                TextColumn::make('partido.abbr')
                     ->label('Partido')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
-                Tables\Columns\TextColumn::make('pacto.name')
+                TextColumn::make('pacto.name')
                     ->label('Pacto')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
-                Tables\Columns\TextColumn::make('subpacto.name')
+                TextColumn::make('subpacto.name')
                     ->label('Subpacto')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('votacion_sum_votes')
+                TextColumn::make('votacion_sum_votes')
                     ->label('Votos')
                     ->numeric()
                     ->alignRight()
@@ -130,34 +141,34 @@ class ConcejalResource extends Resource
                         Sum::make()
                             ->label('Total')
                     ),
-                Tables\Columns\TextColumn::make('percentage')
+                TextColumn::make('percentage')
                     ->label('%')
                     ->alignRight()
                     ->state(function (Concejal $record): string {
                         $totalVotes = ResultadosConcejal::sum('votes');
 
                         return $totalVotes > 0
-                            ? \Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
+                            ? Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
                             : '0.0';
                     }),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('pacto_id')
+                SelectFilter::make('pacto_id')
                     ->label('Pacto')
                     ->relationship('pacto', 'name'),
-                Tables\Filters\SelectFilter::make('subpacto_id')
+                SelectFilter::make('subpacto_id')
                     ->label('Subpacto')
                     ->relationship('subpacto', 'name'),
-                Tables\Filters\SelectFilter::make('partido_id')
+                SelectFilter::make('partido_id')
                     ->label('Partido')
                     ->relationship('partido', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -165,7 +176,7 @@ class ConcejalResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageConcejals::route('/'),
+            'index' => ManageConcejals::route('/'),
         ];
     }
 }

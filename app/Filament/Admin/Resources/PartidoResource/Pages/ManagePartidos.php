@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\PartidoResource\Pages;
 
 use App\Filament\Admin\Resources\PartidoResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ManagePartidos extends ListRecords
@@ -13,7 +13,7 @@ class ManagePartidos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

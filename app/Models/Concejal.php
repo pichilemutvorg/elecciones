@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\ConcejalFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,28 +20,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $partido_id
  * @property int|null $pacto_id
  * @property int|null $subpacto_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Pacto|null $pacto
- * @property-read \App\Models\Partido|null $partido
- * @property-read \App\Models\Subpacto|null $subpacto
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResultadosConcejal> $votacion
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Pacto|null $pacto
+ * @property-read Partido|null $partido
+ * @property-read Subpacto|null $subpacto
+ * @property-read Collection<int, ResultadosConcejal> $votacion
  * @property-read int|null $votacion_count
- * @method static \Database\Factories\ConcejalFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereIsIndependent($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal wherePactoId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal wherePartidoId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal wherePhoto($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereSubpactoId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Concejal whereUpdatedAt($value)
+ * @method static ConcejalFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Concejal newModelQuery()
+ * @method static Builder<static>|Concejal newQuery()
+ * @method static Builder<static>|Concejal query()
+ * @method static Builder<static>|Concejal whereColor($value)
+ * @method static Builder<static>|Concejal whereCreatedAt($value)
+ * @method static Builder<static>|Concejal whereId($value)
+ * @method static Builder<static>|Concejal whereIsIndependent($value)
+ * @method static Builder<static>|Concejal whereName($value)
+ * @method static Builder<static>|Concejal whereNumber($value)
+ * @method static Builder<static>|Concejal wherePactoId($value)
+ * @method static Builder<static>|Concejal wherePartidoId($value)
+ * @method static Builder<static>|Concejal wherePhoto($value)
+ * @method static Builder<static>|Concejal whereSubpactoId($value)
+ * @method static Builder<static>|Concejal whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Concejal extends Model

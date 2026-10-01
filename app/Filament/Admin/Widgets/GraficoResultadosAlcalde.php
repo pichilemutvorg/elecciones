@@ -10,11 +10,11 @@ use Illuminate\Support\Str;
 
 class GraficoResultadosAlcalde extends ChartWidget
 {
-    protected static ?string $heading = 'Votación de candidatos a alcalde';
+    protected ?string $heading = 'Votación de candidatos a alcalde';
 
-    protected static ?string $pollingInterval = '1s';
+    protected ?string $pollingInterval = '1s';
 
-    protected static ?array $options = [
+    protected ?array $options = [
         'plugins' => [
             'legend' => [
                 'display' => false,

@@ -2,26 +2,29 @@
 
 namespace App\Models;
 
+use Database\Factories\PactoFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $name
  * @property string|null $letter
  * @property string $icon
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Database\Factories\PactoFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto query()
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereLetter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pacto whereUpdatedAt($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static PactoFactory factory($count = null, $state = [])
+ * @method static Builder|Pacto newModelQuery()
+ * @method static Builder|Pacto newQuery()
+ * @method static Builder|Pacto query()
+ * @method static Builder|Pacto whereCreatedAt($value)
+ * @method static Builder|Pacto whereIcon($value)
+ * @method static Builder|Pacto whereId($value)
+ * @method static Builder|Pacto whereLetter($value)
+ * @method static Builder|Pacto whereName($value)
+ * @method static Builder|Pacto whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Pacto extends Model

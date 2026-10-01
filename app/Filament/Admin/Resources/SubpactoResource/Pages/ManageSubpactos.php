@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\SubpactoResource\Pages;
 
 use App\Filament\Admin\Resources\SubpactoResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ManageSubpactos extends ListRecords
@@ -13,7 +13,7 @@ class ManageSubpactos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

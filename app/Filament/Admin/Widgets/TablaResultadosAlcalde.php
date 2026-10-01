@@ -7,6 +7,8 @@ use App\Models\ResultadosAlcalde;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Number;
+use Storage;
 
 class TablaResultadosAlcalde extends BaseWidget
 {
@@ -26,7 +28,7 @@ class TablaResultadosAlcalde extends BaseWidget
                     ->label('Candidato')
                     ->formatStateUsing(function (Alcalde $record) {
                         $photoUrl = $record->photo
-                            ? \Storage::disk('public')->url($record->photo)
+                            ? Storage::disk('public')->url($record->photo)
                             : 'https://ui-avatars.com/api/?name='.urlencode($record->name);
 
                         $style = $record->color
@@ -58,7 +60,7 @@ class TablaResultadosAlcalde extends BaseWidget
                         $totalVotes = $this->getTotalVotes();
 
                         return $totalVotes > 0
-                            ? \Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
+                            ? Number::percentage($record->votacion_sum_votes / $totalVotes * 100, 1)
                             : '0.0';
                     }),
             ])
