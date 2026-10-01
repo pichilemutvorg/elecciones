@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a824eff88fcb3fd9c67b4db3ead6e8af",
+    "content-hash": "a85886ad6a9eca93d2bc587fc43f02b1",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -8188,16 +8188,16 @@
         },
         {
             "name": "filament/upgrade",
-            "version": "v5.9.0",
+            "version": "v4.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/upgrade.git",
-                "reference": "5a53f0e8aea7b76f6641d846b8f44fee78e17dfa"
+                "reference": "97e8209d1d3179dedd96b30b5e113e783717753c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/upgrade/zipball/5a53f0e8aea7b76f6641d846b8f44fee78e17dfa",
-                "reference": "5a53f0e8aea7b76f6641d846b8f44fee78e17dfa",
+                "url": "https://api.github.com/repos/filamentphp/upgrade/zipball/97e8209d1d3179dedd96b30b5e113e783717753c",
+                "reference": "97e8209d1d3179dedd96b30b5e113e783717753c",
                 "shasum": ""
             },
             "require": {
@@ -8207,9 +8207,16 @@
                 "rector/rector": "^2.0"
             },
             "bin": [
-                "bin/filament-v5"
+                "bin/filament-v4"
             ],
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\Upgrade\\UpgradeServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Filament\\Upgrade\\": "src"
@@ -8219,13 +8226,13 @@
             "license": [
                 "MIT"
             ],
-            "description": "Upgrade Filament v4 code to Filament v5.",
+            "description": "Upgrade Filament v3 code to Filament v4.",
             "homepage": "https://github.com/filamentphp/filament",
             "support": {
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2026-09-07T18:43:54+00:00"
+            "time": "2026-09-07T18:36:24+00:00"
         },
         {
             "name": "filp/whoops",
