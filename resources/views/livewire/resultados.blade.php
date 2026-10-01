@@ -197,7 +197,7 @@ $getProgress = function () {
 ?>
 
 <div
-    class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50"
+    class="min-h-screen bg-linear-to-br from-blue-50 via-white to-blue-50"
     wire:poll.5000ms="loadResults"
 >
     <div class="container mx-auto py-4 sm:py-8 px-2 sm:px-4">

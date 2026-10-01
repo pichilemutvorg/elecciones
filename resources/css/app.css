@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+/*
+ | Tailwind CSS v4 uses CSS-first configuration. The `@source` directives
+ | below tell the compiler which files to scan for class names. Without them,
+ | utilities used only in Blade templates would be stripped from the output.
+ |
+ | `vendor/filament` is deliberately absent: Filament ships its own compiled
+ | stylesheet and scanning it would be wasted work.
+ */
+@source '../views';
+@source '../../app/Filament';
+@source '../../app/Livewire';

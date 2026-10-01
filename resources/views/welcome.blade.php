@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>Elecciones 2024</title>
 </head>
 
 <body>
-<section class="min-h-screen bg-gradient-to-b from-blue-600 via-blue-500 to-blue-400 flex items-center">
+<section class="min-h-screen bg-linear-to-b from-blue-600 via-blue-500 to-blue-400 flex items-center">
     <div class="max-w-4xl mx-auto px-4 text-center">
         <div class="mb-12">
             <h1 class="text-5xl font-bold text-white mb-5">
