@@ -43,7 +43,7 @@ bun run dev            # servidor de Vite con HMR
 bun audit              # vulnerabilidades del frontend
 composer audit         # vulnerabilidades de PHP
 
-php artisan test       # 38 tests
+php artisan test       # 56 tests
 vendor/bin/pint        # formateador (configurado en pint.json)
 
 php artisan election:simulate --interval=0   # datos de prueba de una eleccion
@@ -60,36 +60,90 @@ mesa y mesa. Sin `--interval=0` tarda unos once minutos.
 - `/admin` — panel de Filament
 - `/up` — endpoint de salud
 
+## Requisitos
+
+- PHP >= 8.3 con `pdo`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`,
+  `json`, `fileinfo` y el driver de base de datos que se use
+- [bun](https://bun.sh) para el frontend. El proyecto usa `bun.lock` y no
+  `package-lock.json` a propósito: mezclar gestores de paquetes es lo que
+  dejó el lock desactualizado en el pasado
+- Una base de datos SQLite, MySQL o PostgreSQL
+
 ## Despliegue
 
-El despliegue se gestiona desde [Ploi](https://ploi.io). Dos advertencias
-importantes:
+El proyecto no está atado a ningún panel de control. `bin/deploy.sh` encadena
+los pasos para cualquier host que cumpla los requisitos:
 
-**1. Hay que compilar el frontend.** Desde que se eliminó el CDN de Tailwind,
-el CSS se sirve desde `public/build/`, que está en `.gitignore`. Si se despliega
-sin compilar, `@vite` falla y el sitio queda sin estilos. El script de
-despliegue debe incluir:
+```bash
+./bin/deploy.sh            # despliegue normal
+./bin/deploy.sh --seed     # además ejecuta los seeders
+./bin/deploy.sh --help
+```
+
+El script pone la aplicación en mantenimiento, instala dependencias de PHP y
+del frontend, compila, limpia cachés, migra, vuelve a publicar los assets de
+Filament y la vuelve a levantar. Si algo falla, la aplicación se restaura
+igual mediante un `trap`.
+
+Dos puntos que no son opcionales:
+
+**Hay que compilar el frontend.** Desde que se eliminó el CDN de Tailwind, el
+CSS se sirve desde `public/build/`, que está en `.gitignore`. Un despliegue
+que no ejecute `bun install && bun run build` deja el sitio sin estilos y con
+`@vite` fallando. El script aborta si tras el build falta el manifiesto.
+
+**`APP_DEBUG` debe ser `false` en producción.** `.env.example` trae `true`
+porque es la plantilla de desarrollo. Con el debug activo se expone
+información interna en la página de error de Laravel.
+
+Si prefieres orquestar los pasos a mano, el equivalente al script sin la
+protección del modo de mantenimiento es:
 
 ```bash
 composer install --no-dev --optimize-autoloader
 bun install --frozen-lockfile
 bun run build
+php artisan optimize:clear
 php artisan migrate --force
-php artisan filament:upgrade   # solo tras actualizar Filament
+php artisan filament:upgrade
 ```
 
-**2. `APP_DEBUG` debe ser `false` en producción.** `.env.example` trae `true`
-porque es la plantilla de desarrollo. Con el debug activo se expone
-información interna en la página de error de Laravel.
+## Acceso al panel
+
+El panel está en `/admin` y solo lo alcanzan las cuentas con `is_admin` a
+`true`. Ese campo no es asignable en masa, de modo que ningún formulario
+puede concederse a sí mismo el acceso; se cambia con
+`forceFill(['is_admin' => true])->save()`.
+
+La autorización sobre las cuentas vive en `App\Policies\UserPolicy`.
+
+Filament limita el login a cinco intentos y, cuando el usuario no tiene
+acceso, responde con el mismo mensaje que ante una contraseña incorrecta, de
+modo que no se revela que la cuenta existe.
+
+### La cuenta de administración
+
+No hay ninguna credencial en el repositorio. `Database\Seeders\UserSeeder` la
+construye desde el entorno:
+
+| Variable | Por defecto | Descripción |
+| --- | --- | --- |
+| `ADMIN_EMAIL` | `admin@example.org` | Correo de la cuenta |
+| `ADMIN_NAME` | `Administrador` | Nombre visible |
+| `ADMIN_PASSWORD` | — | Si falta, se genera una aleatoria de 32 caracteres y se imprime **una sola vez** |
+
+Conviene fijar `ADMIN_EMAIL` y `ADMIN_PASSWORD` en el `.env` del servidor
+antes de sembrar, para no depender de la salida por consola.
+
+Para promover una cuenta existente sin tocar la base de datos a mano:
+
+```bash
+php artisan tinker
+>>> $u = App\Models\User::where('email', 'alguien@example.org')->first();
+>>> $u->forceFill(['is_admin' => true])->save();
+```
 
 ## Notas de operación
-
-### Contraseña del usuario semilla
-
-`database/seeders/UserSeeder.php` crea `dev@nqu.me` con un hash bcrypt
-fijado en el código. Cambiar ese hash cambia la contraseña de ese usuario en
-cualquier entorno donde se haya ejecutado `db:seed`, así que conviene
-sustituirlo por una cuenta propia antes de usar el seed en producción.
 
 ### Base de datos de los tests
 
