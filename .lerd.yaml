@@ -1,0 +1,6 @@
+domains:
+  - elecciones
+php_version: "8.5"
+node_version: "22"
+js_runtime: bun
+secured: true
