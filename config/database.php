@@ -1,14 +1,15 @@
 <?php
 
 use Illuminate\Support\Str;
+use Pdo\Mysql;
 
 // PDO::MYSQL_ATTR_SSL_CA is deprecated as of PHP 8.5 in favour of
 // Pdo\Mysql::ATTR_SSL_CA, which only exists from PHP 8.4 onwards. Resolve
 // whichever one matches the running version; the unused branch is never
 // evaluated, so this stays safe on PHP 8.2 and 8.3.
 $mysqlAttrSslCa = PHP_VERSION_ID >= 80400
-    ? \Pdo\Mysql::ATTR_SSL_CA
-    : \PDO::MYSQL_ATTR_SSL_CA;
+    ? Mysql::ATTR_SSL_CA
+    : PDO::MYSQL_ATTR_SSL_CA;
 
 return [
 
