@@ -19,6 +19,52 @@ varias páginas públicas de consulta en vivo.
 
 ## Puesta en marcha local
 
+### Con Lerd (recomendado)
+
+[Lerd](https://github.com/taylorotwell/lerd) levanta el sitio con nginx y
+PHP-FPM reales, así que lo que se ve en el navegador es lo que se despliega.
+El entorno está versionado en `.lerd.yaml` y `.php-version`, de modo que
+cualquiera que clone el proyecto obtiene el mismo stack.
+
+```bash
+lerd install          # una sola vez por maquina
+lerd link elecciones  # registra el sitio en elecciones.test
+lerd setup            # dependencias, .env, migraciones, assets y HTTPS
+```
+
+`lerd setup` es interactivo: pregunta versión de PHP, HTTPS y servicios. En
+este proyecto la respuesta es PHP 8.5, sin servicios externos (SQLite) y
+HTTPS activado.
+
+Para levantar un sitio ya configurado:
+
+```bash
+lerd start            # DNS, nginx y PHP-FPM
+lerd open             # abre https://elecciones.test
+```
+
+Comandos útiles:
+
+```bash
+lerd status           # salud del entorno
+lerd sites            # sitios registrados
+lerd site:doctor      # diagnostico de la aplicacion
+lerd logs             # logs de PHP-FPM y nginx
+lerd test             # php artisan test en el contenedor
+lerd console          # tinker
+lerd db:shell         # consola de base de datos
+```
+
+`lerd site:doctor` comprueba `.env`, claves, enlace de storage, migraciones,
+dependencias, auditorias y tiempo de respuesta. Es la forma rápida de detectar
+que algo se rompio tras un `composer update`.
+
+El runtime de JavaScript está fijado a **bun** en `.lerd.yaml`, coherente con
+`bun.lock`. Si Lerd cayera en Node crearía un `package-lock.json` que
+introduciría exactamente la deriva de lock que ya se corrigió.
+
+### Sin Lerd
+
 ```bash
 composer install
 bun install
@@ -32,8 +78,9 @@ php artisan migrate --seed
 php artisan storage:link
 ```
 
-`php artisan serve` para el backend, `bun run dev` para el frontend con
-recarga en caliente.
+`php artisan serve` para el backend y `bun run dev` para el frontend con
+recarga en caliente. En este modo las rutas se sirven por `http://localhost:8000`
+y los assets los resuelve Vite en desarrollo, no `public/build`.
 
 ## Comandos habituales
 
@@ -48,6 +95,9 @@ vendor/bin/pint        # formateador (configurado en pint.json)
 
 php artisan election:simulate --interval=0   # datos de prueba de una eleccion
 ```
+
+Con Lerd, `lerd test` y `lerd console` ejecutan lo mismo dentro del contenedor,
+que es el entorno real de desarrollo.
 
 `php artisan election:simulate` reinicia la base de datos, ejecuta los
 seeders y simula el conteo de las 49 mesas con un intervalo de segundos entre
